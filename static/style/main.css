@@ -1,5 +1,5 @@
 *{padding:0;margin:0;box-sizing:border-box;font-weight:normal;}
-html{font-size:24px;font-family: arial, sans-serif;font-weight:400;}
+html{font-size:16px; line-height: 20px; font-family: arial, sans-serif;font-weight:400;}
 body{
 }
 h1, h2, h3
@@ -27,11 +27,43 @@ video{
 }
 header
 {
+	padding: 10px 100px;
+}
+input
+{
+	/*width: 300px;*/
+	width: 50%;
+	padding: 7px;
+	font-size: 15px;
+}
+textarea
+{
+	width: 100%;
+	height: 100px;
+	padding: 7px;
+	font-size: 15px;
+	font-family: sans-serif;
+}
+label + input,
+label + textarea
+{
+	display: block;
+	margin-top: 5px;
+}
+nav
+{
 	
 }
 .container
 {
-	
+	padding: 80px 100px;
+}
+.backend-container
+{
+	width: 800px;
+	margin: 0 auto;
+	padding-left: 0;
+	padding-right: 0;
 }
 #menu_toggle
 {
@@ -47,6 +79,25 @@ header
 	height: 3px;
 	background-color: #000;
 }
+#menu_holder
+{
+	display: none;
+}
+.nav-link
+{
+	display: inline-block;
+	margin-top: 10px;
+}
+
+.form-section
+{
+	margin-bottom: 30px;
+}
+.error-msg
+{
+	color: #f00;
+}
+
 
 @media screen and (min-width: 830px){
 	header
