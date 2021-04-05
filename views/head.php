@@ -1,3 +1,12 @@
+<?
+date_default_timezone_set('Asia/Taipei');
+
+require_once('static/php/connect.php');
+require_once('static/php/tables.php');
+require_once('static/php/function.php');
+$site_name = 'Course Management System';
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +19,6 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <link rel="stylesheet" href="/static/style/main.css">
-    
 </head>
 <body class = ''>
 <script type = "text/javascript" src = "/static/js/_sniffing.js"></script>
