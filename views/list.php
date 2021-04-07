@@ -1,60 +1,47 @@
 <?
-if(!$uri[1])
-	$table_name = 'Teaching';
-else
+foreach($tables as $key => $table)
 {
-	foreach($tables as $key => $table)
-	{
-		if($table['url'] == $uri[2])
-			$table_name = $key;
-	}
+	if($table['url'] == $uri[2])
+		$table_name = $key;
 }
 
+$this_columns = $tables[$table_name]['columns'];
 $items = get_all($table_name);
-
+$no_item_msg = 'Currently there are no available records.';
 ?>
 <section id="<?= isset($container_name) && $container_name ? $container_name : ''; ?>-container" class="container list-container">
 <?
 if($items){
-	if($table_name == 'Teaching')
-	{
+		?><ul>
+		<li class="list-row list-title-row">
+			<? foreach($this_columns as $key => $column){
+				?><span class='list-cell cell-<?= $key; ?>'><?= $column['display_name']; ?></span><?
+			} ?>
+			<span class='list-cell' ></span>
+		</li><?
 		foreach($items as $item){
-			$this_associated_contact = $get_accosiated_item($item['FK_ContactId'], 'Contact', 'ContactId');
-			$this_associated_course = $get_accosiated_item($item['FK_CourseId'], 'Course', 'CourseId');
-			$this_associated_class = $get_accosiated_item($this_associated_course['FK_ClassId'], 'Class', 'classId');
-
-			$this_contact_name = $this_associated_contact['ContactName'];
-			$this_course_name = $this_associated_contact['CourseName'];
-			$this_course_rate = $this_associated_contact['Hourly_Rate'];
-			$this_course_total_hours = $this_associated_contact['Total_Hours'];
-
-			?><ul class="list_row">
-				<li class="row_column"><?= $this_contact_name; ?></li>
-				<li class="row_column"><?= $this_course_total_hours; ?></li>
-				<li class="row_column"><?= $item['Start_Date']; ?></li>
-				<li class="row_column"><?= $this_course_total_hours; ?></li>
-				<li class="row_column"><?= $this_course_total_hours; ?></li>
-			</ul><?
+			?><li class="list-row">
+				<? foreach($this_columns as $key => $column){
+					if(substr($key, 0, 3) == 'fk_'){
+						$foreign_table = substr($key, 3);
+						$foreign_display_column = $tables[$foreign_table]['display_column'];
+						$foreign_id = $item[$key];
+						$foreign_item = get_item($foreign_id, $foreign_table);
+						?><span class='list-cell cell-<?= $key; ?>'><?= $foreign_item[$foreign_display_column]; ?></span><?
+					}
+					else{
+						?><span class='list-cell cell-<?= $key; ?>'><?= $item[$key]; ?></span><?
+					}
+					
+				} ?>
+				<span class='list-cell action-cell' ><a class="btn edit-btn" href="/edit/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">EDIT</a><a class="btn delete-btn" href="/delete/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">DELETE</a></span>
+			</li><?
 		}
-	}
-	else
-	{
-		if($table_name == 'InvitationUnit')
-		$key_name = 'Unit_Name';
-		else
-		{
-			$key_name = $table_name . 'Id';
-		}
-		foreach($items as $item){
-			?><div class="list_row">
-				<div class="row_name"><?= $item[$key_name]; ?></div>
-				<div class="row_type"></div>
-			</div><?
-		}
-	}
-	
-	?><?
+		?></ul><?
 }
-
+else
+{
+	?><p class="error-msg"><?= $no_item_msg; ?></p><?
+}
 ?>
 </section>

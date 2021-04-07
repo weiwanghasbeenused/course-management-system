@@ -44,8 +44,15 @@ textarea
 	font-size: 15px;
 	font-family: sans-serif;
 }
+select
+{
+	display: block;
+	width: 50%;
+	padding: 7px;
+}
 label + input,
-label + textarea
+label + textarea,
+label + select
 {
 	display: block;
 	margin-top: 5px;
@@ -53,6 +60,10 @@ label + textarea
 nav
 {
 	
+}
+ul
+{
+	list-style: none;
 }
 .container
 {
@@ -83,12 +94,27 @@ nav
 {
 	display: none;
 }
-.nav-link
+.menu-item
 {
+	border-bottom: 2px solid transparent;
 	display: inline-block;
-	margin-top: 10px;
+	margin-bottom:5px;
 }
 
+.menu-item:hover
+{
+	border-bottom: 2px solid #000;
+}
+.menu-link
+{
+	display: inline-block;
+	/*margin-left: 10px;*/
+	padding: 0 8px;
+}
+.menu-item-name
+{
+	margin-right: 30px;
+}
 .form-section
 {
 	margin-bottom: 30px;
@@ -97,8 +123,38 @@ nav
 {
 	color: #f00;
 }
+.list-row
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.list-title-row
+{
+	border-bottom: 2px solid #000;
+}
+.list-cell
+{
+	display: inline-block;
+	width: 110px;
+	margin-right: 10px;
+	vertical-align: top;
+}
 
-
+.cell-id
+{
+	width: 30px;
+}
+.cell-name
+{
+	width: 130px;
+}
+.action-cell > a
+{
+	display: inline-block;
+}
+.delete-btn{
+	margin-left: 10px;
+}
 @media screen and (min-width: 830px){
 	header
 	{

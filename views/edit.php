@@ -4,7 +4,8 @@ foreach($tables as $key => $table)
 	if($table['url'] == $uri[2])
 		$table_name = $key;
 }
-
+$this_id = $_GET['id'];
+$this_item = get_item($this_id, $table_name);
 $this_columns = $tables[$table_name]['columns'];
 $this_action = $_POST['action'];
 
@@ -13,7 +14,7 @@ $this_action = $_POST['action'];
 <?
 if( !isset($this_action) ){
 	?>
-	<form id="add-form" 
+	<form id="edit-form" 
 		  enctype="multipart/form-data"
 		  action=""
 		  method="POST"><?
@@ -24,12 +25,14 @@ if( !isset($this_action) ){
 		{
 			?><div class="form-section"><label for='form-<?= $key; ?>'><?= $column['display_name']; ?><?= $isRequired ? '<span class="required-mark">*<span>' : ''; ?></label><?
 		?><?
+			$this_value = (isset($this_item[$key]) && $this_item[$key] != NULL) ? $this_item[$key] : '';
 			if($column['form_type'] == 'input'){
-				?><input id='form-<?= $key; ?>' name='<?= $key; ?>' type='text' class="<?= $isRequired ? 'required' : ''; ?>"><?
+				
+				?><input id='form-<?= $key; ?>' name='<?= $key; ?>' type='text' class="<?= $isRequired ? 'required' : ''; ?>" value="<?= $this_value; ?>"><?
 			}
 			elseif($column['form_type'] == 'textarea')
 			{
-				?><textarea id='form-<?= $key; ?>' name='<?= $key; ?>' class="<?= $isRequired ? 'required' : ''; ?>"></textarea><?
+				?><textarea id='form-<?= $key; ?>' name='<?= $key; ?>' class="<?= $isRequired ? 'required' : ''; ?>" value="<?= $this_value; ?>"></textarea><?
 			}
 			elseif($column['form_type'] == 'fk')
 			{
@@ -56,7 +59,7 @@ if( !isset($this_action) ){
 							$display_name = '['.$this_id.']';
 							if(isset($display_column))
 								$display_name .= ' ' . $item[$display_column];
-							?><option value='<?= $this_id; ?>' ><?= $display_name; ?></option><?
+							?><option value='<?= $this_id; ?>' <?= $this_value == $this_id ? 'selected' : ''; ?>><?= $display_name; ?></option><?
 						}
 					?></select><?
 				}
@@ -69,35 +72,36 @@ if( !isset($this_action) ){
 		}
 	}
 	?>
-	<input type="hidden" name="action" value="add">
+	<input type="hidden" name="action" value="update">
 	</form>
-	<button id='submit-btn' form="add-form">Add</button>
+	<button id='submit-btn' form="edit-form">Update</button>
 	<script type='text/javascript' src = "/static/js/_form.js"></script>
 	<script>
 		var sForm = document.getElementById('add-form');
 		var sRequired = document.querySelectorAll('.required');
-		submit_check(sForm, sRequired);
+		submit_check(sForm, sRequired, 'edit');
 	</script>
-<? }elseif($this_action == 'add'){
-	$item_to_add = array();
+<? }elseif($this_action == 'update'){
+	$item_to_update = array();
 	$passed = true;
 	$toFill = array();
 	foreach($this_columns as $key => $column)
 	{	
 		$coulmn_name = $key;
 		if(!empty($_POST[$coulmn_name]) && $passed)
-			$item_to_add[$coulmn_name] = "'" . addslashes($_POST[$coulmn_name]) . "'";
+			$item_to_update[$coulmn_name] = "'" . addslashes($_POST[$coulmn_name]) . "'";
 		elseif(empty($_POST[$coulmn_name]) && $column['isRequired']){
 			$passed = false;
 			$toFill[] = $column['display_name'];
 		}
 	}
-	if($passed)
-		$insertId = insert($table_name, $item_to_add);
 
-	if($passed && $insertId)
+	if($passed)
+		$isUpdated = update($table_name, $this_id, $item_to_update);
+
+	if($passed && $isUpdated)
 	{
-		?><p>The record is inserted.</p><?
+		?><p>The record is updated.</p><?
 	}else if(!empty($toFill))
 	{
 		?><div class='error-msg'>
