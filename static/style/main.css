@@ -65,6 +65,18 @@ ul
 {
 	list-style: none;
 }
+button
+{
+	appearance: none;
+	-webkit-appearance: none;
+	border: none;
+	background-color: transparent;
+	font-size: inherit;
+}
+button:focus
+{
+	outline: #00f;
+}
 .container
 {
 	padding: 80px 100px;
@@ -135,7 +147,7 @@ ul
 .list-cell
 {
 	display: inline-block;
-	width: 110px;
+	width: 100px;
 	margin-right: 10px;
 	vertical-align: top;
 }
@@ -148,12 +160,54 @@ ul
 {
 	width: 130px;
 }
-.action-cell > a
+.small-cell
 {
-	display: inline-block;
+	width: 50px;
+}
+.large-cell
+{
+	width: 130px;
+}
+.action-cell
+{
+	width: auto;
 }
 .delete-btn{
 	margin-left: 10px;
+}
+.btn
+{
+	display: inline-block;
+	vertical-align: top;
+	padding: 3px 5px;
+	border-radius: 3px;
+	border: 1px solid #00f;
+	color: #00f;
+	text-decoration: none;
+	cursor:pointer;
+}
+.btn.btn-alert
+{
+	color: #f00;
+	border-color: #f00;
+}
+.noTouchScreen .btn:hover
+{
+	background-color: #00f;
+	color: #fff;
+}
+.noTouchScreen .btn.btn-alert:hover
+{
+	background-color: #f00;
+}
+.noTouchScreen .btn:active,
+.btn:active
+{
+	background-color: #000;
+	border-color: #000;
+	padding-top: 5px;
+	padding-bottom: 1px;
+
 }
 @media screen and (min-width: 830px){
 	header

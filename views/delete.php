@@ -11,7 +11,7 @@ $this_columns = $tables[$table_name]['columns'];
 $this_action = $_POST['action'];
 
 ?>
-<section id='add-container' class='container backend-container'>
+<section id='delete-container' class='container backend-container'>
 <?
 if( !isset($this_action) ){
 	$associated_items = get_accosiated_item($this_id, $table_name);
@@ -31,33 +31,22 @@ if( !isset($this_action) ){
 		  method="POST">
 	<input type="hidden" name="action" value="delete">
 	</form>
-	<button id='submit-btn' form="edit-form">DELETE</button>
+	<button id='submit-btn' class="btn btn-alert"form="delete-form">DELETE</button>
 	<!-- <script type='text/javascript' src = "/static/js/_form.js"></script>
 	<script>
 		var sForm = document.getElementById('add-form');
 		var sRequired = document.querySelectorAll('.required');
 		submit_check(sForm, sRequired, 'edit');
 	</script> -->
-<? }elseif($this_action == 'update'){
+<? }elseif($this_action == 'delete'){
 	$item_to_update = array('active' => 0);
 	$passed = true;
-	$isDeleted = delete($table_name, $item_to_update, $this_id);
-
+	$isDeleted = delete($this_id, $table_name);
+var_dump($isDeleted);
 	if($passed && $isDeleted)
 	{
 		?><p>The record is deleted.</p><?
-	}else if(!empty($toFill))
-	{
-		?><div class='error-msg'>
-			<p>The following field(s) are requried. Please make sure that they're filled:</p>
-			<ul>
-				<? foreach($toFill as $item){
-					?><li><?= $item; ?></li><?
-				} ?>
-			</ul>
-		</div><?
-	}
-	else
+	}else
 	{
 		?><p class='error-msg'>The record is NOT deleted.</p><?
 	}

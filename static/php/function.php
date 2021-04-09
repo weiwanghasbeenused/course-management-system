@@ -201,65 +201,65 @@ function update($tablename, $id, $values = array())
 	}
 
 }
-function delete($tablename, $id, $values = array())
+function delete($id, $tablename)
 {
 	global $pdo;
 	global $tables;
 
-	if(!empty($values))
+	$associated_items = get_accosiated_item($id, $tablename);
+	$fk_name = 'fk_' . $tablename;
+	foreach($associated_items as $table => $items)
 	{
-		$associated_items = array();
-		foreach($tables as $key => $table)
+		if($table != 'all')
 		{
-			$columns = $table['columns'];
-			$display_column = $table['display_column'];
-			foreach($columns as $ckey => $column)
+			$this_tablename = $table;
+			$sql_temp = 'UPDATE ' . $this_tablename . ' SET ' . $fk_name . " = '0' WHERE id = '";
+
+			foreach($items as $item)
 			{
-				if($ckey == 'fk_' . $tablename)
+				$sql = $sql_temp . $item['id'] . "'";
+				
+				$pdoStmt = $pdo->prepare($sql);
+				try
 				{
-					$associated_updated = $update($key, $columns['id'], array('fk_' . $tablename=>0));
-					if(!$associated_updated)
+					if($pdoStmt->execute())
+					{
+						return true;
+					}
+					else
+					{
+						echo $pdoStmt->errorCode();
 						return false;
+					}	
+				}
+				catch(Exception $err)
+				{
+					echo 'error in delete()';
 				}
 			}
 		}
+	}
+	
+	$sql = 'UPDATE ' . $tablename . " SET active = '0' WHERE id = '" . $id . "'";
 
-		$this_columns = $tables[$tablename]['columns'];
-		$syntax_set_arr = array();
-		foreach($this_columns as $key => $column)
+	$pdoStmt = $pdo->prepare($sql);
+	try
+	{
+		if($pdoStmt->execute())
 		{
-			$this_column = $key;
-			if( isset($values[$this_column]) && $values[$this_column]){
-				$syntax_set_arr[] = $this_column . " = " . $values[$this_column];
-			}
+			return true;
 		}
-
-		$syntax_set = implode($syntax_set_arr, ',');
-		$sql = 'UPDATE ' . $tablename . ' SET ' . $syntax_set . " WHERE id = '" . $id . "'";
-
-		$pdoStmt = $pdo->prepare($sql);
-		try
+		else
 		{
-			if($pdoStmt->execute())
-			{
-				return true;
-			}
-			else
-			{
-				echo $pdoStmt->errorCode();
-				return false;
-			}	
-		}
-		catch(Exception $err)
-		{
-			echo 'error in update()';
-		}
+			echo $pdoStmt->errorCode();
+			return false;
+		}	
+	}
+	catch(Exception $err)
+	{
+		echo 'error in delete()';
+	}
 			
-	}
-	else{
-		echo '<p class="error-msg">Empty $values in insert(). </p>';
-		return false;
-	}
 
 }
 ?>
