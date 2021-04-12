@@ -27,7 +27,14 @@ video{
 }
 header
 {
+	position: fixed;
+	background-color: #fff;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	max-width: 100%;
 	padding: 10px 100px;
+	z-index: 1001;
 }
 input
 {
@@ -59,7 +66,20 @@ label + select
 }
 nav
 {
-	
+	float: left;
+	/*display: none;*/
+	/*width: 100vw;*/
+	/*max-width: 100%;*/
+	/*position: fixed;*/
+	/*top: 0;*/
+	/*left: 0;*/
+	/*z-index: 1000;*/
+	/*background-color: #fff;*/
+
+}
+.viewing-nav nav
+{
+	display: block;
 }
 ul
 {
@@ -79,7 +99,8 @@ button:focus
 }
 .container
 {
-	padding: 80px 100px;
+	padding: 80px 20px;
+	margin: 0 auto;
 }
 .backend-container
 {
@@ -88,19 +109,72 @@ button:focus
 	padding-left: 0;
 	padding-right: 0;
 }
-#menu_toggle
+.btn-container
+{
+	display: inline-block;
+}
+.btn-container > .btn
+{
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+.btn-container > .btn:last-child
+{
+	margin-right: 0;
+	margin-bottom: 0;
+}
+
+/* menu */
+#menu-container
 {
 	position: fixed;
-	top: 10px;
-	right: 10px;
-	width: 50px;
-	height: 50px;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	left: 0;
+	top: 0;
+	height: 100vh;
+	background-color: #fff;
+	z-index: 1000;
+	/*display: none;*/
+	opacity: 0;
+
+}
+.viewing-menu #menu-container
+{
+	/*display: block;*/
+	width: 100vw;
+	max-width: 100%;
+	opacity: 1;
+	transition: opacity .5s;
+	visibility: initial;
+
+}
+#menu-container > div
+{
+	/*padding-top: 10px;*/
+}
+#site-title
+{
+	float: left;
+}
+#menu_toggle
+{
+	float: right;
+	width: 40px;
+	height: 31px;
 	padding: 5px;
+	cursor: pointer;
 }
 .menu_bar
 {	
 	height: 3px;
 	background-color: #000;
+	margin-bottom: 6px;
+}
+.menu_bar:last-child
+{
+	margin-bottom: 0;
 }
 #menu_holder
 {
@@ -108,16 +182,21 @@ button:focus
 }
 .menu-item
 {
-	border-bottom: 2px solid transparent;
+	/*border-bottom: 2px solid transparent;*/
 	display: inline-block;
-	margin-bottom:5px;
+	/*margin-bottom:5px;*/
+	padding: 5px 5px 0 5px;
 }
 
 .menu-item:hover
 {
-	border-bottom: 2px solid #000;
+	background-color: #ff0;
 }
-.menu-link
+.menu-item > *
+{
+	vertical-align: top;
+}
+.menu-btn
 {
 	display: inline-block;
 	/*margin-left: 10px;*/
@@ -125,7 +204,11 @@ button:focus
 }
 .menu-item-name
 {
-	margin-right: 30px;
+	display: inline-block;
+	/*margin-right: 30px;*/
+	font-size: 18px;
+	padding-top: 5px;
+	width: 200px;
 }
 .form-section
 {
@@ -135,46 +218,61 @@ button:focus
 {
 	color: #f00;
 }
-.list-row
-{
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
 .list-title-row
 {
+	font-size: 12px;
+	letter-spacing: .05em;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 80px;
 	border-bottom: 2px solid #000;
+}
+.list-row
+{
+	/*padding-top: 10px;*/
+	/*padding-bottom: 10px;*/
+	border-bottom: 1px solid #aaa;
+	border-left: 1px solid #aaa;
+}
+.list-row:first-child
+{
+	border-top: 1px solid #aaa;
+}
+.list-row.active
+{
+	background-color: #ffa;
 }
 .list-cell
 {
 	display: inline-block;
-	width: 100px;
-	margin-right: 10px;
+	/*width: 100px;*/
+	/*margin-right: 10px;*/
 	vertical-align: top;
+	border-right: 1px solid #aaa;
+	padding: 10px;
 }
 
 .cell-id
 {
-	width: 30px;
+	/*width: 30px;*/
 }
 .cell-name
 {
-	width: 130px;
+	/*width: 130px;*/
 }
 .small-cell
 {
-	width: 50px;
+	/*width: 50px;*/
 }
 .large-cell
 {
-	width: 130px;
+	/*width: 130px;*/
 }
 .action-cell
 {
-	width: auto;
+	/*width: auto;*/
 }
-.delete-btn{
-	margin-left: 10px;
-}
+
 .btn
 {
 	display: inline-block;
@@ -186,7 +284,7 @@ button:focus
 	text-decoration: none;
 	cursor:pointer;
 }
-.btn.btn-alert
+.btn.alert-btn
 {
 	color: #f00;
 	border-color: #f00;
@@ -196,7 +294,7 @@ button:focus
 	background-color: #00f;
 	color: #fff;
 }
-.noTouchScreen .btn.btn-alert:hover
+.noTouchScreen .btn.alert-btn:hover
 {
 	background-color: #f00;
 }
@@ -209,6 +307,26 @@ button:focus
 	padding-bottom: 1px;
 
 }
+.home-list-row
+{
+	display: grid;
+	grid-template-columns: 3fr 1fr 3fr 3fr 2fr 2fr 2fr 1fr;
+}
+#course-container .list-row
+{
+	display: grid;
+	grid-template-columns: 1fr 3fr 2fr 2fr 2fr 3fr 1.5fr 3fr 3fr 3fr 3fr;
+}
+#teaching-container .list-row
+{
+	display: grid;
+	grid-template-columns: 1fr 3fr 3fr 3fr 2fr 3fr 3fr 3fr;
+}
+#payment-container .list-row
+{
+	display: grid;
+	grid-template-columns: 1fr 3fr 3fr 3fr 2fr 2fr 3fr;
+}
 @media screen and (min-width: 830px){
 	header
 	{
@@ -216,11 +334,14 @@ button:focus
 	}
 	.container
 	{
-		
+		width: auto;
+		margin: 0;
+		padding-left: 100px;
+		padding-right: 100px;
 	}
 	#menu_toggle
 	{
-		display: none;
+		/*display: none;*/
 	}
 }
 

@@ -9,18 +9,18 @@ $this_columns = $tables[$table_name]['columns'];
 $items = get_all($table_name);
 $no_item_msg = 'Currently there are no available records.';
 ?>
-<section id="<?= isset($container_name) && $container_name ? $container_name : ''; ?>-container" class="container list-container">
+<section id="<?= isset($table_name) && $table_name ? strtolower($table_name). '-container' : ''; ?>" class="container list-container">
 <?
 if($items){
-		?><ul>
-		<li class="list-row list-title-row">
+		?><div class="list-container">
+		<div class="list-row list-title-row">
 			<? foreach($this_columns as $key => $column){
 				?><span class='list-cell cell-<?= $key; ?>'><?= $column['display_name']; ?></span><?
 			} ?>
 			<span class='list-cell' ></span>
-		</li><?
+		</div><?
 		foreach($items as $item){
-			?><li class="list-row">
+			?><div class="list-row">
 				<? foreach($this_columns as $key => $column){
 					if(substr($key, 0, 3) == 'fk_'){
 						$foreign_table = substr($key, 3);
@@ -34,10 +34,10 @@ if($items){
 					}
 					
 				} ?>
-				<span class='list-cell action-cell' ><a class="btn edit-btn" href="/edit/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">EDIT</a><a class="btn delete-btn" href="/delete/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">DELETE</a></span>
-			</li><?
+				<span class='list-cell action-cell btn-container' ><a class="btn edit-btn" href="/edit/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">EDIT</a><a class="btn delete-btn alert-btn" href="/delete/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">DELETE</a></span>
+			</div><?
 		}
-		?></ul><?
+		?></div><?
 }
 else
 {

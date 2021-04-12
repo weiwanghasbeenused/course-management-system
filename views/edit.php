@@ -74,7 +74,7 @@ if( !isset($this_action) ){
 	?>
 	<input type="hidden" name="action" value="update">
 	</form>
-	<button id='submit-btn' form="edit-form">Update</button>
+	<button id='submit-btn' class="btn" form="edit-form">Update</button>
 	<script type='text/javascript' src = "/static/js/_form.js"></script>
 	<script>
 		var sForm = document.getElementById('add-form');

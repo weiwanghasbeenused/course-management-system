@@ -39,13 +39,13 @@ $cells_display_name = array(
 ?>
 
 <section id="home-container" class="container">
-	<ul>
-		<li class="list_row">
+	<div id="home-list" class="list-container grid-container">
+		<div class="home-list-row list-row list-title-row">
 		<? 
 		foreach($cells_display_name as $key => $cell){
-		?><span class='list-cell cell-<?= $key; ?> <?= $cell['size']; ?>-cell'><?= $cell['name']; ?></span><?
+		?><span class='list-cell cell-<?= $key; ?>'><?= $cell['name']; ?></span><?
 		} 
-		?></li><?
+		?></div><?
 		foreach($items as $item){
 			$this_associated_contact = get_item($item['fk_Contact'], 'Contact');
 			$this_associated_course = get_item($item['fk_Course'], 'Course');
@@ -61,12 +61,32 @@ $cells_display_name = array(
 				'course_hourly_rate'  => $this_associated_course['hourly_rate'],
 				'course_is_valid'     => $this_associated_course['is_valid']
 			);
-			?><li class="list-row">
+			?><div class="home-list-row list-row">
 				<? foreach($this_row as $key => $cell){
-					?><span class='list-cell cell-<?= $key; ?> <?= $cells_display_name[$key]['size']; ?>-cell'><?= $cell; ?></span><?
+					?><span class='list-cell cell-<?= $key; ?>'><?= $cell; ?></span><?
 				} ?>
-			</li><?
+			</div><?
 		}
 	?>
 	</ul>
 </section>
+<script>
+	var sList_cell = document.getElementsByClassName('list-cell');
+	[].forEach.call(sList_cell, function(el, i){
+		el.addEventListener('click', function(){
+			var activeRow = document.querySelector('.list-row.active');
+			var thisRow = el.parentNode;
+			if(activeRow === thisRow) 
+			{
+				activeRow.classList.remove('active');
+			}
+			else
+			{
+				if(activeRow != null)
+					activeRow.classList.remove('active');
+				thisRow.classList.add('active');
+			}
+			
+		});
+	});
+</script>
