@@ -16,31 +16,32 @@
 		),
 		array(
 			'name' => $current_view,
-			'url'  => false
+			'url'  => '/' . $current_view . '/' . $uri[2]
 		)
 	);
 ?>
 <header>
-	<!-- <h1 id = "site-title">
-		<a href = '/'><? echo $site_name; ?></a>
-	</h1> -->
 	<nav>
 		<? foreach($nav_items as $key => $item){
-			if($item['url'])
+			if($item['name'])
 			{
-				?><span class="nav-item"><?= $key == 0 ? '' : ' > ' ?><a href="<?= $item['url']; ?>"><?= $item['name']; ?></a></span><?
-			}
-			else
-			{
-				?><span class="nav-item"><?= $key == 0 ? $item['name'] : ' > '. $item['name']; ?></span><?
-			}
-			
+				if($item['url'])
+				{
+					?><span class="nav-item"><?= $key == 0 ? '' : ' > ' ?><a href="<?= $item['url']; ?>"><?= $item['name']; ?></a></span><?
+				}
+				else
+				{
+					?><span class="nav-item"><?= $key == 0 ? $item['name'] : ' > '. $item['name']; ?></span><?
+				}
+			}			
 		} ?>
 	</nav>
-	<div id="menu_toggle">
-		<div class="menu_bar"></div>
-		<div class="menu_bar"></div>
-		<div class="menu_bar"></div>
+	<div id = "nav-btn-container">
+		<div id="menu_toggle">
+			<div class="menu-bar"></div>
+			<div class="menu-bar"></div>
+			<div class="menu-bar"></div>
+		</div>
 	</div>
 </header>
 <div id="menu-container" class="container">

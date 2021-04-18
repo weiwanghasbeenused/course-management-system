@@ -4,12 +4,148 @@ foreach($tables as $key => $table)
 	if($table['url'] == $uri[2])
 		$table_name = $key;
 }
-
+$filter_arr = array();
 $this_columns = $tables[$table_name]['columns'];
-$items = get_all($table_name);
+$filter_arr = array();
+$filter_arr['keyword']['filter-type'] = 'input';
+$filter_arr['keyword']['display_name'] = 'Keyword';
+foreach($this_columns as $cname => $column)
+{
+	if(strpos($cname , 'date') !== false ){
+		$filter_arr[$cname] = $column;
+		$filter_arr[$cname]['filter-type'] = 'range';
+	}
+	elseif(substr($cname , 0, 3) == 'fk_' ){
+		$filter_arr[$cname] = $column;
+		$filter_arr[$cname]['filter-type'] = 'select';
+	}
+}
+
+
+if(empty($_GET))
+	$items = get_all($table_name);
+else{
+	$sql = 'SELECT * FROM '.$table_name." WHERE active = '1' AND ";
+	$where = array();
+	foreach ($filter_arr as $cname => $column)
+	{
+		if( isset($_GET[$cname])){
+			$this_value = $_GET[$cname];
+			if($filter_arr[$cname]['filter-type'] == 'input')
+			{
+				$this_columns = $tables[$table_name]['columns'];
+				$concat_temp = array();
+				$sql_concat = 'CONCAT_WS(';
+				foreach($this_columns as $ckey => $column)
+					$concat_temp[] = $ckey;
+				$sql_concat .= implode(',', $concat_temp) . ')';
+
+				$where[] = $sql_concat;
+			}
+			else
+				$where[] = $name . " = '" . $value . "'"; 
+		}
+		else if($filter_arr[$cname]['filter-type'] == 'range')
+		{
+			$this_value_min = $_GET[$cname . '_min'];
+			$this_value_max = $_GET[$cname . '_max'];
+			var_dump($this_value_min);
+			var_dump($cname);
+			if($this_value_min && $this_value_max){
+				echo 'hihi';
+				$where[] = $cname . " BETWEEN " . $this_value_min . " AND " . $this_value_max;
+			}
+			elseif($this_value_min)
+				$where[] = $cname . " >= " . $this_value_min;
+			elseif($this_value_max)
+				$where[] = $cname . " <= " . $this_value_max;
+		}
+			
+	}
+	$sql .= implode($where, ' AND ');
+	var_dump($sql);
+	// die();
+	$items = array();
+	$pdoStmt = $pdo->prepare($sql);
+	if($pdoStmt->execute()){
+		$items = array();
+		while($item = $pdoStmt->fetch(PDO::FETCH_ASSOC))
+			$items[] = $item;
+	}
+	
+}
 $no_item_msg = 'Currently there are no available records.';
 ?>
 <section id="<?= isset($table_name) && $table_name ? strtolower($table_name). '-container' : ''; ?>" class="container list-container">
+	<form id="search-form" 
+		  enctype="multipart/form-data"
+		  action=""
+		  method="GET">
+		<? foreach ($filter_arr as $cname => $column){
+			?><div class="search-form-section"><?
+			if($column['filter-type'] == 'range')
+			{
+				if(isset($_GET) && $_GET[$cname . '_min'])
+					$this_value_min = $_GET[$cname . '_min'];
+				else
+					$this_value_min = '';
+				if(isset($_GET) && $_GET[$cname . '_max'])
+					$this_value_max = $_GET[$cname . '_max'];
+				else
+					$this_value_max = '';
+
+				?>
+				<label for=""><?= $column['display_name']; ?></label><input id = "search-<?= $cname; ?>_min" type = "text" name = "<?= $cname; ?>_min" class="list-filter-field list-filter-field-range" value="<?= $this_value_min; ?>" placeholder="min">&nbsp;&mdash;&nbsp;<input id = "search-<?= $cname; ?>_max" type = "text" name = "<?= $cname; ?>_max" class="list-filter-field list-filter-field-range" value = '<?= $this_value_max; ?>' placeholder="max">
+				<?
+			}
+			elseif($column['filter-type'] == 'select')
+			{
+				$foreign_tablename = substr($cname, 3);
+				$foreign_display_column = $tables[$foreign_tablename]['display_column'];
+				$sql = 'SELECT DISTINCT ' . $cname . ' FROM ' . $table_name;
+				$options = array();
+				$pdoStmt = $pdo->prepare($sql);
+				if($pdoStmt->execute())
+				{
+					while($item = $pdoStmt->fetch(PDO::FETCH_ASSOC))
+						$options[] = $item;
+				}
+				// var_dump($options);
+				if(!empty($options))
+				{
+					if(isset($_GET) && $_GET[$cname])
+						$this_value = $_GET[$cname];
+					else
+						$this_value = '';
+
+					?><select class="list-filter-field" name="<?= $cname; ?>"><option>不限</option><?
+					foreach($options as $option)
+					{
+						$id = $option[$cname];
+						if($id == $this_value)
+							$selected = 'selected';
+						else
+							$selected = '';
+						$option_name = get_item($id, $foreign_tablename, array($foreign_display_column))[$foreign_display_column];
+						?><option value="<?= $id; ?>" <?= $selected; ?>><?= $option_name; ?></option><?
+					}
+					?></select><?
+				}
+			}
+			else
+			{
+				if(isset($_GET) && $_GET[$cname])
+					$this_value = $_GET[$cname];
+				else
+					$this_value = '';
+				?><label><?= $column['display_name']; ?></label><input type = "text" name = "<?= $cname; ?>" value = "<?= $this_value; ?>" class="list-filter-field" ><?
+			}
+			?></div><?
+		} ?>
+	</form>
+	<div class="btn-container">
+		<button id='search-btn' class="btn" form="search-form">查詢</button><button id='reset-btn' class="btn alert-btn" >清除</button>
+	</div>
 <?
 if($items){
 		?><div class="list-container">
@@ -34,7 +170,7 @@ if($items){
 					}
 					
 				} ?>
-				<span class='list-cell action-cell btn-container' ><a class="btn edit-btn" href="/edit/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">EDIT</a><a class="btn delete-btn alert-btn" href="/delete/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">DELETE</a></span>
+				<span class='list-cell action-cell btn-container' ><a class="btn edit-btn" href="/edit/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">編輯</a><a class="btn delete-btn alert-btn" href="/delete/<?= $uri[2]; ?>?id=<?= $item['id']; ?>">刪除</a></span>
 			</div><?
 		}
 		?></div><?
@@ -45,3 +181,52 @@ else
 }
 ?>
 </section>
+<script src = '/static/js/after_list.js'></script>
+<script>
+	var sSearch_btn = document.getElementById('search-btn');
+	var sSearch_form = document.getElementById('search-form');
+	var sReset_btn = document.getElementById('reset-btn');
+	var self_url = '<?= implode($uri, '/'); ?>';
+	var sList_filter_field = document.getElementsByClassName('list-filter-field');
+	
+	sSearch_form.addEventListener('submit', function(event){
+		event.preventDefault();
+		var query = '?';
+		[].forEach.call(sList_filter_field, function(el, i){
+			console.log(el.tagName);
+			if(el.tagName == 'INPUT' && el.classList.contains('list-filter-field-range'))
+			{
+				if(el.value !== ''){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+			else if(el.tagName == 'SELECT')
+			{
+				if(el.selectedIndex != 0){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+			else
+			{
+				if(el.value !== ''){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+		});
+		if(query != '?')
+			location.href = self_url + query;
+	});
+	sReset_btn.addEventListener('click', function(){
+		location.href = self_url;
+	});
+	
+</script>

@@ -18,6 +18,8 @@ elseif($uri[1] == 'edit')
 	require_once("views/edit.php");
 elseif($uri[1] == 'delete') 
 	require_once("views/delete.php");
+elseif($uri[1] == 'search') 
+	require_once("views/search.php");
 
 require_once("views/foot.php");
 

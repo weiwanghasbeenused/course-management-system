@@ -19,6 +19,18 @@ function submit_check(form, required_fields)
 			form.submit();
 	});
 }
+function search_check(form, required_fields)
+{
+	form.addEventListener('submit', function(event){
+		event.preventDefault();
+		var input_table = form.querySelector('input[name="table"]');
+		
+		if(!passed)
+			return false;
+		else
+			form.submit();
+	});
+}
 
 function add_required_alert(field){
 	field.classList.add('toFill');

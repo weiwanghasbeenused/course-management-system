@@ -17,7 +17,8 @@ if( !isset($this_action) ){
 	<form id="edit-form" 
 		  enctype="multipart/form-data"
 		  action=""
-		  method="POST"><?
+		  method="POST"
+		  class="backend-form"><?
 	foreach($this_columns as $key => $column)
 	{
 		$isRequired = $column['isRequired'];

@@ -70,23 +70,4 @@ $cells_display_name = array(
 	?>
 	</ul>
 </section>
-<script>
-	var sList_cell = document.getElementsByClassName('list-cell');
-	[].forEach.call(sList_cell, function(el, i){
-		el.addEventListener('click', function(){
-			var activeRow = document.querySelector('.list-row.active');
-			var thisRow = el.parentNode;
-			if(activeRow === thisRow) 
-			{
-				activeRow.classList.remove('active');
-			}
-			else
-			{
-				if(activeRow != null)
-					activeRow.classList.remove('active');
-				thisRow.classList.add('active');
-			}
-			
-		});
-	});
-</script>
+<script src = '/static/js/after_list.js'></script>
