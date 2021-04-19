@@ -307,7 +307,7 @@ function display_filter($filter_arr, $get_arr){
 					else
 						$this_value = '';
 
-					?><select class="list-filter-field" name="<?= $cname; ?>"><option>不限</option><?
+					?><label><?= $column['display_name']; ?></label><select class="list-filter-field" name="<?= $cname; ?>"><option>不限</option><?
 					if( substr($cname, 0, 3) == 'fk_')
 					{
 						foreach($options as $option)

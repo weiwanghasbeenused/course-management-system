@@ -8,7 +8,7 @@ foreach($tables as $key => $table)
 $this_columns = $tables[$table_name]['columns'];
 $filter_arr = array();
 $filter_arr['keyword']['filter-type'] = 'input';
-$filter_arr['keyword']['display_name'] = 'Keyword';
+$filter_arr['keyword']['display_name'] = '關鍵字';
 $filter_arr['keyword']['tablename'] = $table_name;
 foreach($this_columns as $cname => $column)
 {
@@ -185,4 +185,4 @@ else
 }
 ?>
 </section>
-<script src = '/static/js/after_list.js'></script>
+<script type='text/javascript' src = '/static/js/after_list.js'></script>

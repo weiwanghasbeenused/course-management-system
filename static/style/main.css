@@ -39,15 +39,22 @@ header
 	padding: 10px 100px;
 	z-index: 1001;
 }
-input[type="text"]
-{
-	padding: 7px;
-	font-size: 15px;
-}
+input[type="text"],
 textarea
 {
 	padding: 7px;
 	font-size: 15px;
+	border: none;
+	border-bottom: 2px solid #00f;
+	background-color: #f4f4f4;
+	color: #00f;
+}
+input[type="text"]:focus,
+textarea:focus
+{
+	color: #000;
+	outline: none;
+	background-color: #fff;
 }
 select
 {
@@ -61,25 +68,34 @@ label + input[type="radio"]
 	display: inline-block;
 	padding-left: 5px;
 }
-.backendform input[type="text"]
+.backend-form input[type="text"]
 {
 	/*width: 300px;*/
 	width: 50%;
 	
 }
-.backendform textarea
+.backend-form textarea
 {
-	width: 100%;
+	width: 50%;
 	height: 100px;
-	
+	display: inline-block;
 	font-family: sans-serif;
+	vertical-align: top;
 }
-.backendform label + input[type="text"],
-.backendform label + textarea,
-.backendform label + select
+.backend-form label 
 {
-	display: block;
-	margin-top: 5px;
+	vertical-align: top;
+	width: 120px;
+	display: inline-block;
+	margin-right: 10px;
+}
+.backend-form label + input[type="text"],
+.backend-form label + textarea,
+.backend-form label + select
+{
+	display: inline-block;
+	/*margin-top: 5px;*/
+
 }
 nav
 {
@@ -138,6 +154,8 @@ button:focus
 {
 	margin-right: 8px;
 	margin-bottom: 8px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .btn-container > .btn:last-child
 {
@@ -190,6 +208,27 @@ button:focus
 	height: 31px;
 	padding: 5px;
 	cursor: pointer;
+	position: relative;
+}
+.viewing-menu #menu_toggle .menu-bar:first-child
+{
+	/*position: absolute;*/
+	/*top: 14px;*/
+	/*width: 100%;*/
+	transform: translate(0, 9.5px) rotate(-45deg);
+	margin: 0;
+}
+.viewing-menu #menu_toggle .menu-bar:nth-child(2)
+{
+	display: none;
+}
+.viewing-menu #menu_toggle .menu-bar:last-child
+{
+	/*position: absolute;*/
+	/*top: 14px;*/
+	/*width: 100%;*/
+	transform: translate(0, 6.5px) rotate(45deg);
+	margin: 0;
 }
 .menu-bar
 {	
@@ -234,19 +273,14 @@ button:focus
 	font-size: 18px;
 	width: 200px;
 }
-#search-btn
+#search-btn,
+#submit-btn
 {
 	display: inline-block;
 	width: 80px;
-	/*height: 31px;*/
-	padding: 5px;
 	cursor: pointer;
 }
-#reset-btn
-{
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
+
 .form-section
 {
 	margin-bottom: 30px;
@@ -275,7 +309,7 @@ button:focus
 	line-height: 14px;
 	position: -webkit-sticky;
 	position: sticky;
-	top: 51px;
+	top: 56px;
 	border-bottom: 2px solid var(--border-color);
 	background-color: #fff;
 	color: var(--border-color);
@@ -321,7 +355,7 @@ button:focus
 {
 	display: inline-block;
 	vertical-align: top;
-	padding: 5px 8px;
+	padding: 8px;
 	border-radius: 3px;
 	border: 1px solid #00f;
 	color: #00f;
@@ -410,15 +444,15 @@ button:focus
 }
 #search-form
 {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 #search-form + .btn-container
 {
-	margin-bottom: 15px;
+	margin-bottom: 50px;
 }
 .search-form-section
 {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 .search-form-section:last-child
 {
@@ -431,6 +465,8 @@ button:focus
 .search-form-section label
 {
 	margin-right: 10px;
+	width: 80px;
+	display: inline-block;
 }
 .search-form-section input
 {
@@ -441,8 +477,20 @@ button:focus
 }
 .search-form-section input:focus
 {
-	outline: none;
-	background-color: #fff;
+	
+}
+.search-form-section select
+{
+	display: inline-block;
+	
+	background-color: #f4f4f4;
+	border: none;
+	border-bottom: 2px solid #00f;
+}
+#submit-btn,
+#search-btn
+{
+	margin-right: 15px;
 }
 @media screen and (min-width: 830px){
 	header
@@ -455,10 +503,6 @@ button:focus
 		margin: 0;
 		padding-left: 100px;
 		padding-right: 100px;
-	}
-	#menu_toggle
-	{
-		/*display: none;*/
 	}
 }
 

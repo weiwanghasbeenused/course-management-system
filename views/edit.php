@@ -75,10 +75,12 @@ if( !isset($this_action) ){
 	?>
 	<input type="hidden" name="action" value="update">
 	</form>
-	<button id='submit-btn' class="btn" form="edit-form">Update</button>
+	<div class="btn-container">
+		<button id='submit-btn' class="btn" form="edit-form">Update</button><button id='cancel-btn' class="btn alert-btn" >Cancel</button>
+	</div>
 	<script type='text/javascript' src = "/static/js/_form.js"></script>
 	<script>
-		var sForm = document.getElementById('add-form');
+		var sForm = document.getElementById('edit-form');
 		var sRequired = document.querySelectorAll('.required');
 		submit_check(sForm, sRequired, 'edit');
 	</script>

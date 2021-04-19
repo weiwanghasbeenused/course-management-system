@@ -46,3 +46,65 @@ function remove_required_alert(field){
 	this_label.classList.remove('error-msg');
 	this_label.innerText = '*';
 }
+var sSearch_btn = document.getElementById('search-btn');
+var sSearch_form = document.getElementById('search-form');
+var sReset_btn = document.getElementById('reset-btn');
+var sCancel_btn = document.getElementById('cancel-btn');
+var self_url = window.location.pathname;
+
+var sList_filter_field = document.getElementsByClassName('list-filter-field');
+
+if(sSearch_form != undefined)
+{
+	sSearch_form.addEventListener('submit', function(event){
+		event.preventDefault();
+		var query = '?';
+		[].forEach.call(sList_filter_field, function(el, i){
+			console.log(el.tagName);
+			if(el.tagName == 'INPUT' && el.classList.contains('list-filter-field-range'))
+			{
+				if(el.value !== ''){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+			else if(el.tagName == 'SELECT')
+			{
+				if(el.selectedIndex != 0){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+			else
+			{
+				if(el.value !== ''){
+					if(query == '?')
+						query += el.name + '=' + el.value;
+					else
+						query += '&' + el.name + '=' + el.value;
+				}
+			}
+		});
+		if(query != '?')
+			location.href = self_url + query;
+	});
+}
+
+if(sReset_btn != undefined)
+{
+	sReset_btn.addEventListener('click', function(){
+		location.href = self_url;
+	});
+}
+
+if(sCancel_btn != undefined)
+{
+	sCancel_btn.addEventListener('click', function(){
+		history.go(-1);
+		// return false;
+	});
+}

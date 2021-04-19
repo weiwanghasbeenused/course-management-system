@@ -40,7 +40,7 @@ $cells_display_name = array(
 
 $filter_arr = array();
 $filter_arr['keyword']['filter-type'] = 'input';
-$filter_arr['keyword']['display_name'] = 'Keyword';
+$filter_arr['keyword']['display_name'] = '關鍵字';
 $filter_arr['start_date'] = $tables['teaching']['start_date'];
 $filter_arr['start_date']['display_name'] = $cells_display_name['start_date']['name'];
 $filter_arr['start_date']['filter-type'] = 'range';
@@ -49,7 +49,6 @@ $filter_arr['is_valid'] = $tables['course']['is_valid'];
 $filter_arr['is_valid']['display_name'] = $cells_display_name['course_is_valid']['name'];
 $filter_arr['is_valid']['filter-type'] = 'select';
 $filter_arr['is_valid']['tablename'] = 'course';
-
 ?>
 
 <section id="home-container" class="container">
@@ -85,4 +84,4 @@ $filter_arr['is_valid']['tablename'] = 'course';
 	?>
 	</ul>
 </section>
-<script src = '/static/js/after_list.js'></script>
+<script type='text/javascript' src = '/static/js/after_list.js'></script>
