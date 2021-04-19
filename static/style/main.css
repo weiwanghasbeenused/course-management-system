@@ -344,15 +344,7 @@ button:focus
 {
 	background-color: #f00;
 }
-.noTouchScreen .btn:active,
-.btn:active
-{
-	background-color: #000;
-	border-color: #000;
-	padding-top: 5px;
-	padding-bottom: 1px;
 
-}
 .home-list-row
 {
 	display: grid;

@@ -4,21 +4,25 @@ foreach($tables as $key => $table)
 	if($table['url'] == $uri[2])
 		$table_name = $key;
 }
-$filter_arr = array();
+
 $this_columns = $tables[$table_name]['columns'];
 $filter_arr = array();
 $filter_arr['keyword']['filter-type'] = 'input';
 $filter_arr['keyword']['display_name'] = 'Keyword';
+$filter_arr['keyword']['tablename'] = $table_name;
 foreach($this_columns as $cname => $column)
 {
 	if(strpos($cname , 'date') !== false ){
 		$filter_arr[$cname] = $column;
 		$filter_arr[$cname]['filter-type'] = 'range';
+		$filter_arr[$cname]['tablename'] = $table_name;
 	}
 	elseif(substr($cname , 0, 3) == 'fk_' ){
 		$filter_arr[$cname] = $column;
 		$filter_arr[$cname]['filter-type'] = 'select';
+		$filter_arr[$cname]['tablename'] = $table_name;
 	}
+	
 }
 
 
@@ -39,20 +43,18 @@ else{
 				foreach($this_columns as $ckey => $column)
 					$concat_temp[] = $ckey;
 				$sql_concat .= implode(',', $concat_temp) . ')';
-
+				$sql_concat .= " LIKE '%" . $this_value . "%'";
 				$where[] = $sql_concat;
 			}
-			else
-				$where[] = $name . " = '" . $value . "'"; 
+			else{
+				$where[] = $cname . " = '" . $this_value . "'"; 
+			}
 		}
 		else if($filter_arr[$cname]['filter-type'] == 'range')
 		{
 			$this_value_min = $_GET[$cname . '_min'];
 			$this_value_max = $_GET[$cname . '_max'];
-			var_dump($this_value_min);
-			var_dump($cname);
 			if($this_value_min && $this_value_max){
-				echo 'hihi';
 				$where[] = $cname . " BETWEEN " . $this_value_min . " AND " . $this_value_max;
 			}
 			elseif($this_value_min)
@@ -62,9 +64,8 @@ else{
 		}
 			
 	}
+
 	$sql .= implode($where, ' AND ');
-	var_dump($sql);
-	// die();
 	$items = array();
 	$pdoStmt = $pdo->prepare($sql);
 	if($pdoStmt->execute()){
@@ -77,6 +78,7 @@ else{
 $no_item_msg = 'Currently there are no available records.';
 ?>
 <section id="<?= isset($table_name) && $table_name ? strtolower($table_name). '-container' : ''; ?>" class="container list-container">
+	<!-- 
 	<form id="search-form" 
 		  enctype="multipart/form-data"
 		  action=""
@@ -146,7 +148,9 @@ $no_item_msg = 'Currently there are no available records.';
 	<div class="btn-container">
 		<button id='search-btn' class="btn" form="search-form">查詢</button><button id='reset-btn' class="btn alert-btn" >清除</button>
 	</div>
+	 -->
 <?
+display_filter($filter_arr, $_GET, $table_name);
 if($items){
 		?><div class="list-container">
 		<div class="list-row list-title-row">
@@ -182,51 +186,3 @@ else
 ?>
 </section>
 <script src = '/static/js/after_list.js'></script>
-<script>
-	var sSearch_btn = document.getElementById('search-btn');
-	var sSearch_form = document.getElementById('search-form');
-	var sReset_btn = document.getElementById('reset-btn');
-	var self_url = '<?= implode($uri, '/'); ?>';
-	var sList_filter_field = document.getElementsByClassName('list-filter-field');
-	
-	sSearch_form.addEventListener('submit', function(event){
-		event.preventDefault();
-		var query = '?';
-		[].forEach.call(sList_filter_field, function(el, i){
-			console.log(el.tagName);
-			if(el.tagName == 'INPUT' && el.classList.contains('list-filter-field-range'))
-			{
-				if(el.value !== ''){
-					if(query == '?')
-						query += el.name + '=' + el.value;
-					else
-						query += '&' + el.name + '=' + el.value;
-				}
-			}
-			else if(el.tagName == 'SELECT')
-			{
-				if(el.selectedIndex != 0){
-					if(query == '?')
-						query += el.name + '=' + el.value;
-					else
-						query += '&' + el.name + '=' + el.value;
-				}
-			}
-			else
-			{
-				if(el.value !== ''){
-					if(query == '?')
-						query += el.name + '=' + el.value;
-					else
-						query += '&' + el.name + '=' + el.value;
-				}
-			}
-		});
-		if(query != '?')
-			location.href = self_url + query;
-	});
-	sReset_btn.addEventListener('click', function(){
-		location.href = self_url;
-	});
-	
-</script>

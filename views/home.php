@@ -1,6 +1,7 @@
 <?
 $table_name = 'Teaching';
 $items = get_all($table_name);
+
 $cells_display_name = array(
 	'course_name' => array(
 		'name' => '課程名稱',
@@ -36,9 +37,23 @@ $cells_display_name = array(
 	)
 
 );
+
+$filter_arr = array();
+$filter_arr['keyword']['filter-type'] = 'input';
+$filter_arr['keyword']['display_name'] = 'Keyword';
+$filter_arr['start_date'] = $tables['teaching']['start_date'];
+$filter_arr['start_date']['display_name'] = $cells_display_name['start_date']['name'];
+$filter_arr['start_date']['filter-type'] = 'range';
+$filter_arr['start_date']['tablename'] = 'teaching';
+$filter_arr['is_valid'] = $tables['course']['is_valid'];
+$filter_arr['is_valid']['display_name'] = $cells_display_name['course_is_valid']['name'];
+$filter_arr['is_valid']['filter-type'] = 'select';
+$filter_arr['is_valid']['tablename'] = 'course';
+
 ?>
 
 <section id="home-container" class="container">
+	<? display_filter($filter_arr, $_GET, $table_name); ?>
 	<div id="home-list" class="list-container grid-container">
 		<div class="home-list-row list-row list-title-row">
 		<? 
@@ -52,14 +67,14 @@ $cells_display_name = array(
 			$this_associated_class = get_item($this_associated_course['fk_Class'], 'Class');
 			$this_contact_name = ( isset($this_associated_contact['name2']) && $this_associated_contact['name2'] != NULL ) ? $this_associated_contact['name2'] .' '. $this_associated_contact['name'] : $this_associated_contact['name'];
 			$this_row = array(
-				'course_name'         => $this_associated_course['name'],
-				'course_total_hours'  => $this_associated_course['total_hours'],
+				'course-name'         => $this_associated_course['name'],
+				'course-total_hours'  => $this_associated_course['total_hours'],
 				'start_date'          => $item['start_date'],
-				'class_classroom'     => $this_associated_class['classroom'],
-				'class_name'          => $this_associated_class['name'],
+				'class-classroom'     => $this_associated_class['classroom'],
+				'class-name'          => $this_associated_class['name'],
 				'contact_name'        => $this_contact_name,
-				'course_hourly_rate'  => $this_associated_course['hourly_rate'],
-				'course_is_valid'     => $this_associated_course['is_valid']
+				'course-hourly_rate'  => $this_associated_course['hourly_rate'],
+				'course-is_valid'     => $this_associated_course['is_valid']
 			);
 			?><div class="home-list-row list-row">
 				<? foreach($this_row as $key => $cell){

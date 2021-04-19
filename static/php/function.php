@@ -258,8 +258,100 @@ function delete($id, $tablename)
 	catch(Exception $err)
 	{
 		echo 'error in delete()';
-	}
-			
+	}		
+}
 
+function display_filter($filter_arr, $get_arr){
+	global $pdo;
+	global $tables;
+
+	?><form id="search-form" 
+		  enctype="multipart/form-data"
+		  action=""
+		  method="GET"><?
+	foreach ($filter_arr as $cname => $column){
+			?><div class="search-form-section"><?
+			if($column['filter-type'] == 'range')
+			{
+				if(isset($get_arr) && $get_arr[$cname . '_min'])
+					$this_value_min = $get_arr[$cname . '_min'];
+				else
+					$this_value_min = '';
+				if(isset($get_arr) && $get_arr[$cname . '_max'])
+					$this_value_max = $get_arr[$cname . '_max'];
+				else
+					$this_value_max = '';
+				?>
+				<label for=""><?= $column['display_name']; ?></label><input id = "search-<?= $cname; ?>_min" type = "text" name = "<?= $cname; ?>_min" class="list-filter-field list-filter-field-range" value="<?= $this_value_min; ?>" placeholder="min">&nbsp;&mdash;&nbsp;<input id = "search-<?= $cname; ?>_max" type = "text" name = "<?= $cname; ?>_max" class="list-filter-field list-filter-field-range" value = '<?= $this_value_max; ?>' placeholder="max">
+				<?
+			}
+			elseif($column['filter-type'] == 'select')
+			{
+				$foreign_tablename = substr($cname, 3);
+				$foreign_display_column = $tables[$foreign_tablename]['display_column'];
+				$sql = 'SELECT DISTINCT ' . $cname . ' FROM ' . $column['tablename'];
+				// var_dump($sql);
+				// die();
+				$options = array();
+				$pdoStmt = $pdo->prepare($sql);
+				if($pdoStmt->execute())
+				{
+					while($item = $pdoStmt->fetch(PDO::FETCH_ASSOC))
+						$options[] = $item;
+				}
+				// var_dump($options);
+				if(!empty($options))
+				{
+					if(isset($get_arr) && $get_arr[$cname])
+						$this_value = $get_arr[$cname];
+					else
+						$this_value = '';
+
+					?><select class="list-filter-field" name="<?= $cname; ?>"><option>不限</option><?
+					if( substr($cname, 0, 3) == 'fk_')
+					{
+						foreach($options as $option)
+						{
+							$id = $option[$cname];
+							if($id === $this_value)
+								$selected = 'selected';
+							else
+								$selected = '';
+							$option_name = get_item($id, $foreign_tablename, array($foreign_display_column))[$foreign_display_column];
+							?><option value="<?= $id; ?>" <?= $selected; ?>><?= $option_name; ?></option><?
+						}
+					}
+					else
+					{
+						foreach($options as $option)
+						{
+							$option_value = $option[$cname];
+							if($option_value == $this_value)
+								$selected = 'selected';
+							else
+								$selected = '';
+							$option_name = $option_value
+							?><option value="<?= $id; ?>" <?= $selected; ?>><?= $option_name; ?></option><?
+						}
+					}
+					
+					?></select><?
+				}
+			}
+			else
+			{
+				if(isset($get_arr) && $get_arr[$cname])
+					$this_value = $get_arr[$cname];
+				else
+					$this_value = '';
+				?><label><?= $column['display_name']; ?></label><input type = "text" name = "<?= $cname; ?>" value = "<?= $this_value; ?>" class="list-filter-field" ><?
+			}
+			?></div><?
+		} ?>
+	</form>
+	<div class="btn-container">
+		<button id='search-btn' class="btn" form="search-form">查詢</button><button id='reset-btn' class="btn alert-btn" >清除</button>
+	</div>
+<?
 }
 ?>
