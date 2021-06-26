@@ -28,6 +28,7 @@ function get_item($id, $tablename, $fields = array())
 {
 	global $pdo;
 
+	$tablename = strtolower($tablename);
 	if( empty($fields) )
 		$sql = 'SELECT * ';
 	else
@@ -56,6 +57,7 @@ function get_accosiated_item($id, $tablename, $fields = array())
 	global $pdo;
 	global $tables;
 
+	$tablename = strtolower($tablename);
 	$notEmpty = false;
 	$associated_tables = array();
 	$output = array();
@@ -123,6 +125,7 @@ function insert($tablename, $values = array())
 	global $pdo;
 	global $tables;
 
+	$tablename = strtolower($tablename);
 	if(!empty($values))
 	{
 		$this_columns = $tables[$tablename]['columns'];
@@ -162,6 +165,7 @@ function update($tablename, $id, $values = array())
 	global $pdo;
 	global $tables;
 
+	$tablename = strtolower($tablename);
 	if(!empty($values))
 	{
 		$this_columns = $tables[$tablename]['columns'];
@@ -207,6 +211,7 @@ function delete($id, $tablename)
 	global $pdo;
 	global $tables;
 
+	$tablename = strtolower($tablename);
 	$associated_items = get_accosiated_item($id, $tablename);
 	$fk_name = 'fk_' . $tablename;
 	foreach($associated_items as $table => $items)
