@@ -265,7 +265,9 @@ function display_filter($filter_arr, $get_arr){
 	global $pdo;
 	global $tables;
 
-	?><form id="search-form" 
+	?>
+	<div class="form-container">
+	<form id="search-form" 
 		  enctype="multipart/form-data"
 		  action=""
 		  method="GET"><?
@@ -290,8 +292,6 @@ function display_filter($filter_arr, $get_arr){
 				$foreign_tablename = substr($cname, 3);
 				$foreign_display_column = $tables[$foreign_tablename]['display_column'];
 				$sql = 'SELECT DISTINCT ' . $cname . ' FROM ' . $column['tablename'];
-				// var_dump($sql);
-				// die();
 				$options = array();
 				$pdoStmt = $pdo->prepare($sql);
 				if($pdoStmt->execute())
@@ -348,9 +348,10 @@ function display_filter($filter_arr, $get_arr){
 			}
 			?></div><?
 		} ?>
-	</form>
-	<div class="btn-container">
-		<button id='search-btn' class="btn" form="search-form">查詢</button><button id='reset-btn' class="btn alert-btn" >清除</button>
+		</form>
+		<div class="btn-container">
+			<button id='search-btn' class="btn" form="search-form">查詢</button><button id='reset-btn' class="btn alert-btn" >清除</button>
+		</div>
 	</div>
 <?
 }
