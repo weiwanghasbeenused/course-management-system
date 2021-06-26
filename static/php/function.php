@@ -4,6 +4,7 @@ function get_all($tablename, $fields = array())
 {
 	global $pdo;
 
+	$tablename = strtolower($tablename);
 	if( empty($fields) )
 		$sql = 'SELECT * ';
 	else
@@ -290,6 +291,7 @@ function display_filter($filter_arr, $get_arr){
 			elseif($column['filter-type'] == 'select')
 			{
 				$foreign_tablename = substr($cname, 3);
+				var_dump($column['tablename']);
 				$foreign_display_column = $tables[$foreign_tablename]['display_column'];
 				$sql = 'SELECT DISTINCT ' . $cname . ' FROM ' . $column['tablename'];
 				$options = array();
