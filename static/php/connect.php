@@ -1,8 +1,8 @@
 <?
-$hostname_conn = "localhost";
-$database_conn = "course_management_system_local";
-$username_conn = "root";
-$password_conn = "f3f4p4ax";
+$hostname_conn = 'localhost';
+$database_conn = '';
+$username_conn = '';
+$password_conn = '';
 try {
 	$pdo = new PDO('mysql:host='.$hostname_conn.'; port=3306; dbname='.$database_conn.'; charset=utf8', $username_conn, $password_conn,
 			array(PDO::ATTR_EMULATE_PREPARES=>false,
